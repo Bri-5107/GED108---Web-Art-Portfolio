@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GED108 Art Appreciation Portfolio</title>
+    <style>
+        /* Same styles as before — kept intact for layout */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .bg-animation {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 200% 200%; animation: gradientShift 15s ease infinite;
+        }
+        .bg-animation::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255,107,107,0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(72,219,251,0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(254,202,87,0.2) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(30px,-30px) scale(1.1); }
+            66% { transform: translate(-20px,20px) scale(0.9); }
+        }
+
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            padding: 1.5rem 2rem;
+            background: rgba(10,10,10,0.8); backdrop-filter: blur(20px);
+            z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav-content {
+            max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem; font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a {
+            color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 500; transition: all 0.3s ease;
+        }
+
+        .hero {
+            min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; text-align: center; padding: 8rem 2rem 4rem; position: relative;
+        }
+        .hero h1 {
+            font-size: 6rem; font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: -3px;
+        }
+        .hero-subtitle { font-size: 1.8rem; opacity: 0.8; margin-bottom: 3rem; font-weight: 300; }
+
+        .stats-section {
+            max-width: 1200px; margin: -80px auto 6rem; padding: 0 2rem; position: relative; z-index: 10;
+        }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 2rem;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 20px;
+            padding: 2.5rem; text-align: center; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat-number {
+            font-size: 3rem; font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label { font-size: 1.1rem; opacity: 0.8; }
+
+        .modules-container {
+            max-width: 1400px; margin: 0 auto; padding: 4rem 2rem;
+        }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-title { font-size: 3.5rem; font-weight: 800; margin-bottom: 1rem; }
+        .section-description {
+            font-size: 1.2rem; opacity: 0.7; max-width: 600px; margin: 0 auto;
+        }
+
+        .module-section { margin-bottom: 8rem; }
+        .module-header {
+            display: flex; align-items: center; gap: 2rem; margin-bottom: 3rem;
+        }
+        .module-number-box {
+            width: 120px; height: 120px; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, rgba(102,126,234,0.2) 0%, rgba(118,75,162,0.2) 100%);
+            backdrop-filter: blur(20px); border-radius: 30px; border: 2px solid rgba(255,255,255,0.2);
+            font-size: 3rem; font-weight: 900;
+        }
+
+        .module-info h3 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .module-info p { opacity: 0.7; font-size: 1.1rem; }
+
+        .artworks-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(380px,1fr)); gap: 2rem;
+        }
+
+        .artwork-card {
+            background: rgba(10,10,10,0.6); backdrop-filter: blur(20px); border-radius: 30px;
+            overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .artwork-header {
+            padding: 2rem 2rem 1rem; display: flex; align-items: center; gap: 1.5rem;
+        }
+        .artwork-icon {
+            width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px; font-size: 2rem;
+        }
+        .artwork-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .artwork-type { font-size: 0.9rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
+
+        .artwork-body {
+            padding: 0 2rem 2rem;
+            text-align: center;
+        }
+
+        /* Make images/videos responsive */
+        .artwork-media {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            display: block;
+
+        }
+
+        .reflections-section {
+            max-width: 1200px; margin: 8rem auto 4rem; padding: 0 2rem;
+        }
+        .reflection-card {
+            background: rgba(10,10,10,0.6); backdrop-filter: blur(20px); border-radius: 40px;
+            padding: 4rem; border: 1px solid rgba(255,255,255,0.1); position: relative;
+        }
+        .reflection-title {
+            font-size: 3rem; font-weight: 800; margin-bottom: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .reflection-content { line-height: 1.9; font-size: 1.15rem; opacity: 0.9; }
+        .reflection-content p { margin-bottom: 1.5rem; }
+        .reflection-list {
+            background: rgba(255,255,255,0.03); border-left: 4px solid #667eea;
+            padding: 2rem; border-radius: 15px; margin: 2rem 0;
+        }
+        .reflection-list li {
+            margin-bottom: 1rem; padding-left: 1rem; list-style: none; position: relative;
+        }
+        .reflection-list li::before {
+            content: '→'; position: absolute; left: -1rem; color: #667eea; font-weight: 900;
+        }
+
+        .footer {
+            text-align: center; padding: 4rem 2rem;
+            background: rgba(10,10,10,0.8); backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.1); margin-top: 6rem;
+        }
+        .footer-content { max-width: 600px; margin: 0 auto; }
+        .footer h3 { font-size: 2rem; margin-bottom: 1rem; }
+        .footer p { opacity: 0.7; line-height: 1.8; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; letter-spacing: -1px; }
+            .hero-subtitle { font-size: 1.2rem; }
+            .nav-links { display: none; }
+            .artworks-grid { grid-template-columns: 1fr; }
+            .section-title { font-size: 2.5rem; }
+            .module-header { flex-direction: column; text-align: center; }
+            .module-number-box { width: 100px; height: 100px; }
+            .reflection-card { padding: 2rem; }
+        }
+
+        .self-art-container {
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 0 2rem; 
+        }
+
+        
+        .self-art-container .artworks-grid {
+            grid-template-columns: 1fr; 
+        }
+
+    
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <nav>
+        <div class="nav-content">
+            <div class="logo">🎨 GED108</div>
+            <div class="nav-links">
+                <a href="#modules">Modules</a>
+                <a href="#reflections">Reflections</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="hero-badge">✨ Art Appreciation Portfolio 2024–2025</div>
+        <h1>Creative Journey<br>Through Art</h1>
+        <p class="hero-subtitle">A curated collection of visual explorations and cultural discoveries</p>
+    </div>
+
+    <div class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Modules Completed</div></div>
+            <div class="stat-card"><div class="stat-number">7</div><div class="stat-label">Creative Works</div></div>
+            <div class="stat-card"><div class="stat-number">∞</div><div class="stat-label">Insights Gained</div></div>
+        </div>
+    </div>
+
+    <div class="modules-container" id="modules">
+        <div class="section-header">
+            <h2 class="section-title">Portfolio Modules</h2>
+            <p class="section-description">Explore my artistic journey through three comprehensive modules</p>
+        </div>
+
+        <!-- Module 1 -->
+        <div class="module-section">
+            <div class="module-header">
+                <div class="module-number-box">01</div>
+                <div class="module-info">
+                    <h3>Foundations of Visual Art</h3>
+                    <p>Building blocks of artistic understanding and visual literacy</p>
+                </div>
+            </div>
+            <div class="artworks-grid">
+                <div class="artwork-card">
+                    <div class="artwork-header">
+                        <div class="artwork-icon">📸</div>
+                        <div class="artwork-meta">
+                            <div class="artwork-title">Photo Essay</div>
+                            <div class="artwork-type">Visual Narrative</div>
+                        </div>
+                    </div>
+                    <div class="artwork-body">
+                        <!-- 👇 Paste your image here -->
+                        <img src="imgs/My Mapua Journey.png" alt="Photo Essay" class="artwork-media" style="width: 550px; height: 300px;">
+                        <p>This photo essay depicts the challenging yet rewarding life I am having at Mapúa University. 
+                            he images are carefully sequenced to build a narrative of pressure, resilience, and the ultimate pursuit of knowledge. 
+                            It contrasts the stark, academic setting with moments of personal reflection and growth. 
+                            The overall message is that a life as a Mapúan student demands dedication but always promises hope and a brighter future at the end of all the challenges.</p>
+                    </div>
+                </div>
+
+                <div class="artwork-card">
+                    <div class="artwork-header">
+                        <div class="artwork-icon">🔍</div>
+                        <div class="artwork-meta">
+                            <div class="artwork-title">Art Analysis</div>
+                            <div class="artwork-type">Critical Study</div>
+                        </div>
+                    </div>
+                    <div class="artwork-body">
+                        <!-- 👇 Paste two images if needed -->
+                        <img src="imgs/ArtAnal1.png" alt="Visual Analysis 1" class="artwork-media" style="width: 300px; height: 400px; max-width: 100%;
+                        display: block; margin-left: auto; margin-right: auto">
+                        <img src="imgs/ArtAnal2.png" alt="Visual Analysis 2" class="artwork-media" style="width: 300px; height: 400px; max-width: 100%;
+                        display: block; margin-left: auto; margin-right: auto">
+                        <p>This analysis focuses on the musical art of Jose Mari Chan, specifically examining the composition and cultural impact of his most famous Christmas songs.
+                            Through a critical lens, the work explores how Jose Mari Chan uses melody and lyrics to strike powerful emotions and memories tied to the Filipino holiday spirit.
+                            This study was an enjoyable way of understanding how one of the most famous local pieces of art came into existence and gained such enduring national significance. 
+                            It demonstrates how musical composition utilizes structure and rhythm as essential artistic elements.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 2 -->
+        <div class="module-section">
+            <div class="module-header">
+                <div class="module-number-box">02</div>
+                <div class="module-info">
+                    <h3>Cultural Exploration</h3>
+                    <p>Discovering global artistic traditions</p>
+                </div>
+            </div>
+            <div class="artworks-grid">
+                <div class="artwork-card">
+                    <div class="artwork-header">
+                        <div class="artwork-icon">🏛️</div>
+                        <div class="artwork-meta">
+                            <div class="artwork-title">Museum Visit</div>
+                            <div class="artwork-type">Cultural Experience</div>
+                        </div>
+                    </div>
+                    <div class="artwork-body">
+                        <img src="imgs/museumVisit.png" alt="Museum Visit" class="artwork-media">
+                        <p>This documentation captures the experience of a museum visit, offering insights into how curated spaces shape the viewer's perception of art. 
+                            It focuses on the historical context and thematic arrangement of a specific exhibit, exploring the institutional framing of cultural artifacts. 
+                            The visit emphasizes how the physical presence of an art impacts appreciation. 
+                            This task allowed me to directly engage with masterpieces and understand the power of conservation and appreciation.</p>
+                    </div>
+                </div>
+
+                <div class="artwork-card">
+                    <div class="artwork-header">
+                        <div class="artwork-icon">🌍</div>
+                        <div class="artwork-meta">
+                            <div class="artwork-title">Global Culture Integration</div>
+                            <div class="artwork-type">Cross-Cultural Study</div>
+                        </div>
+                    </div>
+                    <div class="artwork-body">
+                        <img src="imgs/crossCultural.png" alt="Global Culture" class="artwork-media" style="height: 600px";>
+                        <p>This study is an exploration of how diverse cultural traditions can be showcased through art. This art titled, "Rhythmic Art" by Alex Mensah, represents the musical 
+                            tradition and culture of the Ghanian people. This underscores the crucial role of art in expressing and teaching others about their own culture and
+                            tradition, transceding national borders and differences. 
+                        </p>
+                    </div>
+                </div>
+
+                <div class="artwork-card">
+                    <div class="artwork-header">
+                        <div class="artwork-icon">🎨</div>
+                        <div class="artwork-meta">
+                            <div class="artwork-title">Art Movements</div>
+                            <div class="artwork-type">Historical Analysis</div>
+                        </div>
+                    </div>
+                    <div class="artwork-body">
+                        <!-- For video, use this format -->
+                        <!--
+                        <video controls class="artwork-media" poster="imgs/art-movements-poster.jpg">
+                            <source src="videos/art-movements.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        -->
+                        <img src="imgs/artMovement.png" alt="Art Movements" class="artwork-media";>
+                        <p> This is a comprehensive video exploration of major art movement throughout history -- Expressionism and Dadaism. 
+                            The presentation details the key characteristics, historical contexts, and artists associated with each period. 
+                            We analyze how successive movements often reacted to or built upon the traditions of their predecessors. 
+                            This visual study emphasizes the evolution of artistic thought and the social forces that drive change in aesthetics and technique
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 3 -->
+        <div class="module-section">
+            <div class="module-header">
+                <div class="module-number-box">03</div>
+                <div class="module-info">
+                    <h3>Creative Expression</h3>
+                    <p>Personal artistic voice and innovative interpretation</p>
+                </div>
+            </div>
+            <div class="artworks-grid">
+                <div class="artwork-card">
+                    <div class="artwork-header">
+                        <div class="artwork-icon">🎥</div>
+                        <div class="artwork-meta">
+                            <div class="artwork-title">Art Talk Video</div>
+                            <div class="artwork-type">Video Presentation</div>
+                        </div>
+                    </div>
+                    <div class="artwork-body">
+                        <!-- Example video embed -->
+                        <!--
+                        <video controls class="artwork-media" style="aspect-ratio: 9/16; max-height: 70vh;">
+                            <source src="videos/art-talk.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        -->
+                        <video src="vids/DIONISIO_Quiz_ArtTalk.mp4" controls width="400" alt="Art Talk Video" class="artwork-media"
+                         style="width: 400px; max-width: 100%; aspect-ratio: 9/16; display: block; margin-left: auto; margin-right: auto"></video>
+                         
+                        <p>A recorded presentation discussing how I entered the world of music. This video talks about how the art of music became
+                            my source of life and creativity. 
+                        </p>
+                    </div>
+                </div>
+
+                <div class="artwork-card">
+                    <div class="artwork-header">
+                        <div class="artwork-icon">🖼️</div>
+                        <div class="artwork-meta">
+                            <div class="artwork-title">Photo Appropriation</div>
+                            <div class="artwork-type">Creative Reinterpretation</div>
+                        </div>
+                    </div>
+                    <div class="artwork-body">
+                        <img src="imgs/appropriation.png" alt="Photo Appropriation" class="artwork-media">
+                        <p>This  demonstrates the utilization of the concept of appropriation to imbue a familiar image with new meaning. The original work was altered through physical techniques, effectively challenging its initial context and message. By deliberately manipulating the source material, the final piece invites the viewer to reconsider the significance of borrowed art. This project allowed for personal commentary through visual reinterpretation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Self-Art -->
+    <div class = "section-header">
+        <h2 class="section-title">Self-Art</h2>
+        <p class="section-description">An Art that Represents Myself</p>
+    </div>
+    <div class="self-art-container">
+        <div class="module-section">
+            
+            <div class="artworks-grid">
+                <div class="artwork-card">
+                    <div class="artwork-body">
+                        <img src="imgs/selfArt.jpeg" alt="Photo Essay" class="artwork-media" style="width: 350px; height: 350px; 
+                        display: block; margin-left: auto; margin-right: auto">
+                        <p>This abstract artowrk may seem meaningless at first, but this art represents the totality of my personality. It is made up of geometric shapes, bright colors (red, blue, green, yellow, orange, purple), and symmetry — but also variety. There is structure (grids, patterns) but also playfulness and movement. 
+                            The red areas represent how passionate i am in approaching life and learning — I want to move, create, and build anything. The yellow areas is where my curiosity about how the world works and how everything is interconnected to each other. Moving on, the green areas means growth and balance because as I strive for learning and curiosity, 
+                            growth also comes as I value improvement as a learner and as a person. The blue colors are calmness and logic because I strive to grow as a rational person, not always relying on emotions.  </p>
+                        <br>
+                        <p>Next, the purple shapes represents my creativity and imagination, symbolizing how I mix logic with creativity — liking structure but also making room for self-expression. Lastly, the different shapes and directions, show my passion for diversity and flexibility as I am open to try new things that would encourage self-growth and expression. 
+                            Overall, this artwork represents me because it shows how I am made up of different sides — structured yet creative, logical yet colorful. Each section may be different but they all connect just like my personality. </p>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Reflections Section -->
+    <div class="reflections-section" id="reflections">
+        <div class="reflection-card">
+            <h2 class="reflection-title">Learning Reflections</h2>
+            <div class="reflection-content">
+                <p><strong>Through my journey in GED108 Art Appreciation,</strong> I have discovered profound insights...</p>
+                <div class="reflection-list">
+                    <li><strong>Visual Literacy:</strong> I learned to read and interpret visual elements such as color, texture, balance, and symbolism. Where before I'd just say an artwork was "beautiful" or "weird," now I could describe why. I would notice how light and lines create emotion or focus, and how artists use contrast to express feelings. It's like learning a new language-the language of visuals. Understanding this made me see the world in a more detailed and meaningful way, even outside of class.</li>
+                    <li><strong>Cultural Context:</strong> A work of art cannot be taken out of its cultural and historical context. I realized that every piece of art reflects the values, struggle, and beliefs of its time. For instance, the paintings during wars, revolutions, or even in simple village life show what people went through and what they cared about. It helped me see that art is not just decoration—it’s a record of human experience. Knowing the background of an artwork makes it more alive and powerful.</li>
+                    <li><strong>Personal Connection:</strong> Appreciation of art is a very personal affair; everybody sees and feels something different from the same piece. Some artworks remind me of memories, feelings, or even dreams. I learn that there is no single "right" interpretation. What matters is how honestly we connect with what we see. This made me realize that appreciating art also means appreciating myself-my emotions, my perspective, and my growth.</li>
+                    <li><strong>Critical Thinking:</strong> Artworks analysis allowed me to increase my depth in thinking and asking questions. Instead of just accepting what is put before me, I try finding meaning, purpose, and message. I learned to look beyond the surface to see the intention behind every touch of the brush or detail in a sculpture. This further applies to life; it has taught me to be more curious, reflective, and analytical about things happening around me.</li>
+                    <li><strong>Global Perspective:</strong> Being exposed to artistic traditions and expressions from every part of the world opened a new perspective on how unique and creative individuals can be. Every culture has its own voice, and the strongest way they can express it is through art. From Asian crafts to European paintings, to Filipino art, it showed me how different yet connected we really are. It furthered respect toward diversity and appreciation of how art brings humanity together despite all our differences.</li>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <h3>✨ Thank You for Visiting</h3>
+            <p>This portfolio represents my journey through GED108 Art Appreciation</p>
+        </div>
+    </div>
+</body>
+</html>
+
